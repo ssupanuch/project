@@ -13,11 +13,12 @@ This new direct route will be operated by Southwest Airlines. Southwest Airlines
 
 **Five Questions:** 
 
-1. What is the underlying O&D demand ABI–HOU/IAH?
-2. How reliable would the direct flight be for customers? 
-3. How profitable is the direct flight considering the plausible fare price and load factors? 
-4. What does the demand for direct flights look like over time, and how would it likely evolve?
-5. Given all of the factors, how much demand should Southwest expect if the direct flight were launched?
+1. Is There Suppressed ABI → Houston Demand Due to Lack of Nonstop Service?
+2. How Much Extra Time and Burden Do ABI Passengers Endure Today Without a Nonstop?
+3. What High-Yield Connecting Markets Would ABI Gain Through IAH?
+4. What Reliability Environment Will ABI–IAH Enter?
+5. Can ABI–IAH Produce Competitive Revenue per Block Hour?
+
 
 ## BI / Data Overview
 
@@ -34,30 +35,101 @@ Available tools:
 - **ARIMA** — 
 - **XGBoost** — 
 
-## Question Sets by Dataset 
+## Integrated Questions 
 
-- **DB1B Section**  
-     - List your 5 DB1B-driven questions.  
-     - Emphasize:
+### Q1 — Is There Suppressed ABI → Houston Demand Due to Lack of Nonstop Service?
 
+**Datasets**: DB1B + DB28
 
-- **DB28 Section**  
-     - List your 5 DB28-driven questions.  
-     - Emphasize:
+**Purpose**: Establish underlying O&D demand that is hidden because all travel is via connections.
 
+**Computation**
 
-- **ASQP Section**  
-     - List your 5 ASQP-driven questions.  
-     - Emphasize:
+- DB1B:
+  - Count all ABI ↔ IAH/HOU passengers, regardless of routing.
+  - Split into connecting vs (nonexistent) nonstop:
+       - PAX_CONNECTING = sum(DB1B pax where connecting)
+       - PAX_NONSTOP ≈ 0
+
+- DB28:
+  - Confirm that no ABI–Houston nonstop exists in the historical schedule.
+  
+---
+
+### Q2 — How Much Extra Time and Burden Do ABI Passengers Endure Today Without a Nonstop?
+
+**Datasets**: DB1B + ASQP
+
+**Purpose**: Demonstrate the passenger pain point that a nonstop ABI–IAH would fix.
+
+**Computation**
+
+- DB1B:
+  - For ABI → Houston trips (via DFW, DAL, AUS):
+       - Extract total itinerary elapsed time (T_total = departure to arrival).
+
+- ASQP:
+  - Get block times for flights of similar stage length (≈ 280 miles).
+  - Compute what ABI → IAH would take as a direct:
+       - T_direct ≈ mean(ASQP block times for 250–300 mile routes)
+
+---
+
+### Q3 — What High-Yield Connecting Markets Would ABI Gain Through IAH?
+
+**Datasets**: DB1B + DB28
+
+**Purpose**: Show that ABI → IAH is a hub-feeder route worth more than its local O&D.
+
+**Computation**
+
+- DB1B:
+  - Rank ABI → long-haul O&D markets by yield (revenue per passenger-mile).
+  - Identify which naturally connect via Houston (Latin America, Gulf Coast, Mountain West, etc.).
+
+- DB28:
+  - Identify the frequency of departures from IAH to those exact connecting markets.
+
+---
+
+### Q4 — What Reliability Environment Will ABI–IAH Enter?
+
+**Datasets**: DB28 + ASQP
+
+**Purpose**: Evaluate operational feasibility and connection protection.
+
+**Computation**
+
+- DB28:
+  - Identify the IAH connection banks ABI would feed (morning, midday, evening).
+
+- ASQP:
+  - Calculate reliability of existing IAH feeder flights:
+       - Mean ARR_DELAY
+       - 90th percentile delay
+       - Cancellation rates
+       - Ground/Taxi times
+       - Weather delay frequencies
+
+---
+
+### Q5 — Can ABI–IAH Produce Competitive Revenue per Block Hour?
+
+**Datasets**: DB1B + DB28 + ASQP 
+
+**Purpose**: Tie demand, reliability, and yield into a financial viability question.
+
+**Computation**
+
+- DB1B:
+     - Estimate average fare for ABI → Houston and ABI → long-hauls.
+- DB28:
+  - Get typical seats and load factors for comparable Texas regional routes.
+- ASQP:
+  - Obtain actual block times for similar stage length operations.
+
+---
  
-- **Integrated Questions Section**  
-     - What is the underlying O&D demand ABI–HOU/IAH?
-     - How reliable would the direct flight be for customers?
-     - How profitable is the direct flight considering the plausible fare price and load factors?
-     - What does the demand for direct flights look like over time, and how would it likely evolve?
-     - Given all of the factors, how much demand should Southwest expect if the direct flight were launched?
-
-
 ## Forecasting and Planning Concept 
 
 
