@@ -104,10 +104,9 @@ Available tools:
   - Identify the IAH connection banks ABI would feed (morning, midday, evening).
 
 - ASQP:
-  - Calculate reliability of existing IAH feeder flights:
+  - Calculate the reliability of existing IAH feeder flights:
        - Mean ARR_DELAY
        - 90th percentile delay
-       - Cancellation rates
        - Ground/Taxi times
        - Weather delay frequencies
 
