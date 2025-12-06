@@ -368,6 +368,7 @@ rev_per_block_hr_feeder = rev_per_flight_feeder / mean_block_time_hr
   - Peer regional RPBH: $191,012
   - ARIMA-projected RPBH: $185k – $193k
 
+![q5graph]()
 
 **Data → Information → Knowledge**
 
