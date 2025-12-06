@@ -112,6 +112,8 @@ Available tools:
 
 **Analysis**
 
+![q4graph](https://github.com/ssupanuch/project/blob/0725363cc5139728b9ecec32c9e3963633e6d92f/Q4.png)
+
 Based on data from August 2024 to June 2025, ABI→IAH will enter a moderately reliable environment. Most months show low to moderate arrival delays, supporting connection protection at IAH. The most reliable months are Sep–Nov 2024, with high flight frequency and minimal delays. Some months (Apr–Jun 2025) exhibit higher 90th percentile delays (18–25 minutes) and moderate departures, increasing the risk that passengers could miss tight connections. Overall, the route is operationally feasible, but planning should consider these higher-risk periods when allocating connection buffers.
 
 ---
