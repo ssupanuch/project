@@ -7,9 +7,15 @@
 ---
 ## Introduction
 
-Our chosen Texas city pair is Abilene to Houston. 
+This project evaluates the commercial and operational viability of launching a new Abilene (ABI) → Houston (IAH) nonstop service. 
 
-This new direct route will be operated by Southwest Airlines. Southwest Airlines sees the potential growth in this route because Abilene has a mix of business (agriculture, healthcare, energy, and manufacturing) and leisure (universities and smaller cities to travel). Abilene is an easier connection for central Texas. Instead of driving 3 hours to DFW and dealing with chaos to fly, they can drive to Abilene airport, fly to Houston, and then connect to anywhere. This service route is not about tourist demand but a steady and reliable traffic that feeds to a major hub.
+Our chosen carrier is Southwest Airlines, a logical entrant because of its Texas brand strength and the natural fit of Houston Hobby (HOU) as a mid-continent connecting gateway. While Abilene is not a tourism-driven market, it carries a stable mix of business, government, military, university, and essential-travel demand. These travelers are not discretionary; they travel because they must. 
+
+The guiding belief behind this analysis is simple:
+> ABI–IAH would not win because of local travelers alone.
+> It would win because it unlocks Abilene’s long-haul, high-yield connecting potential.
+
+To validate this, we built the full BI → Data Analytics → ML loop
 
 **Five Questions:** 
 
@@ -30,10 +36,7 @@ Available data via aviation_core:
 
 Available tools:
 
-- **BI** — 
-- **DADS** — 
-- **ARIMA** — 
-- **XGBoost** — 
+- **BI, ARIMA, XGBoost** 
 
 ## Integrated Questions 
 
@@ -375,10 +378,70 @@ rev_per_block_hr_feeder = rev_per_flight_feeder / mean_block_time_hr
 **Knowledge:** ABI→IAH is **not viable** on local O&D alone, but becomes financially competitive when it collects connecting passengers at IAH — projected RPBH matches regional peers and stays stable in short-term forecasting.
 
 
+
+**Full loop recap:**
+
+- **Data:** DB28, DB1B, and ASQP.
+- **Information:** Demand for travel from ABI to Houston is substantial, averaging about 10 million passengers quarterly, with the vast majority currently forced to take connecting flights, adding an average of 115 extra minutes per passenger.
+- **Knowledge:** ABI→IAH is a suppressed demand market where significant O&D is forced into connections, resulting in a measurable loss of nearly two hours per passenger. The financial viability for an airline to establish a 1-2 daily narrow-body nonstop service hinges on capturing high-yield connecting passengers to achieve revenue per block hour parity with comparable Texas regional routes.
+- **Decision:** We can launch one daily $\text{ABI} \leftrightarrow \text{IAH}$ roundtrip using a narrow-body aircraft (e.g., A319/E175), timing it to align with IAH's prime international and transcontinental connection banks to maximize high-yield connecting traffic capture.
+- **Action:** The plan is to implement the proposed daily schedule and intensely monitoring key operational and commercial metrics, including load factor, ancillary spend, and connection performance, on a daily and weekly basis. Realized data must be fed back into the models quarterly to refine projections and trigger automated decision alerts, such as adding a second frequency if the load factor and connection capture thresholds are consistently met.
+
+
 ---
  
 ## Forecasting and Planning Concept 
 
 
+| Model Type  | Role and Purpose | ABI $\rightarrow$ IAH Use Case  |
+| --- | --- |  ---  |
+| **ARIMA / SARIMA**	|  **Baseline & Short-Term Extrapolation**—Models a single time series to provide simple, reliable forecasts (1–12 months) and quantify uncertainty. |  Sets initial frequency (e.g., 1x daily if RPBH of \$185\text{k}$ is forecasted) and informs short-term inventory/pricing adjustments.  |
+| **XGBoost (Boosted Trees)** | **Structural & Scenario Analysis**—Integrates many engineered features (distance, reliability, competitors, marketing) to model non-linear interactions and predict outcomes for new or complex scenarios. |  Simulates the impact of adding a 2nd frequency or changing schedule alignment on connecting capture, and develops price elasticity models for revenue optimization.  |
 
-## Conclusion 
+
+**How Forecasts Drive Decisions**
+
+- **Frequency:** If the ARIMA forecast shows RPBH comfortably above break-even for 1x daily, launch with 1x. Use XGBoost scenarios to determine if adding a 2nd frequency will increase connecting capture enough to justify the cost (e.g., scale up if LF $\ge 70\%$ and connecting pickup $\ge 20\%$ is predicted/realized).
+- **Seasonality:** ARIMA identifies general seasonal peaks (holidays, summer) for temporary frequency increases. XGBoost refines this by quantifying which specific events (like energy conferences) amplify high-yield connecting conversion, ensuring extra capacity is strategically deployed.
+- **Pricing:** ARIMA provides baseline volume for inventory control. XGBoost estimates price elasticity by segment, guiding the decision to set higher, inelastic fares for bank-aligned, business-heavy flights or offer discounts for leisure traffic.
+- **Reliability:** Operational data (90th percentile delays from ASQP) is fed into XGBoost to score the risk of missed connections, informing the decision to increase the planned connection buffer (e.g., $60-75$ minutes) during high-delay months.
+
+
+
+
+## Conclusion
+
+**The most powerful question was Q3: What high-yield connecting markets would ABI gain through Houston?**
+
+This unlocked the real story: Abilene’s passengers are disproportionately long-haul and high-yield relative to the city’s size. These travelers are making trips anyway—often paying high fares and accepting long connections through DFW.
+
+
+**Where the Data Was Strongest**
+
+- DB1B clearly showed suppressed but high-fare ABI→Houston demand and strong long-haul yield.
+- DB28 gave solid lookalike spokes (LBB, SJT, MAF) that operate successfully with similar size and distance.
+- ASQP confirmed that block times, fuel costs, and delay patterns fall in the normal range for short-stage regional flying.
+
+
+**Where the Data Was Weak**
+
+- Quarterly DB1B samples are thin. ABI’s size makes fare averages volatile.
+- ABI–IAH doesn’t exist today, so all seat/capacity modeling depends on analogues.
+- ASQP can’t measure demand—only operations.
+
+This is why the forecasting lens (ARIMA baseline + XGBoost features) became essential: it helps smooth noise, test scenarios, and avoid overreliance on any single dataset.
+
+**What We Ultimately Learned About ABI–IAH**
+
+There is unmet and suppressed demand that would shift to a nonstop. Passengers are losing unnecessary time on current DFW-based itineraries. High-yield long-haul travelers (Latin America, Mountain West, East/West Coasts) are already there—and IAH is the perfect hub. Revenue per block hour (RPBH) is competitive with other intrastate feeders.
+
+Put simply:
+> ABI→IAH is not a high-volume route, but it is a high-value route.
+> It earns its keep by feeding long-haul revenue, not by carrying local O&D.
+
+Looking at ABI–IAH through the BI → Analytics → ML loop doesn’t just give an answer—it changes how we think about Texas regional aviation. Instead of relying on anecdotes or assumptions, we can use a modern decision-science approach to reveal opportunities that used to be invisible.
+
+> ABI–IAH isn’t guaranteed to be a home run.
+> But the data strongly indicates it is worth a disciplined, analytically guided launch—with the right schedule, right frequency, and right expectation:
+> steady, reliable, connecting-focused revenue—not tourism spikes.
+
