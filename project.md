@@ -36,7 +36,7 @@ Available data via aviation_core:
 
 Available tools:
 
-- **BI, ARIMA, XGBoost** 
+- **BI, DADS, ARIMA, and XGBoost** 
 
 ## Integrated Questions 
 
